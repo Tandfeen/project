@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    --background: 260 25% 11%;
+    --foreground: 210 40% 98%;
+    --card: 260 25% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 260 25% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 252 100% 69%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 260 25% 16%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 260 25% 16%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 260 25% 16%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 260 25% 16%;
+    --input: 260 25% 16%;
+    --ring: 260 25% 16%;
+    --radius: 0.75rem;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+.neon-border {
+  box-shadow: 0 0 5px theme('colors.neon.purple'),
+              0 0 10px theme('colors.neon.purple'),
+              0 0 15px theme('colors.neon.purple');
+}
+
+.neon-text {
+  text-shadow: 0 0 5px theme('colors.neon.purple'),
+               0 0 10px theme('colors.neon.purple'),
+               0 0 15px theme('colors.neon.purple');
+}
+
+.relay-ready {
+  box-shadow: 0 0 5px theme('colors.neon.green'),
+              0 0 10px theme('colors.neon.green'),
+              0 0 15px theme('colors.neon.green');
+}
+
+.relay-fired {
+  box-shadow: 0 0 5px theme('colors.neon.red'),
+              0 0 10px theme('colors.neon.red'),
+              0 0 15px theme('colors.neon.red');
+}
+
+.relay-staged {
+  box-shadow: 0 0 5px theme('colors.neon.yellow'),
+              0 0 10px theme('colors.neon.yellow'),
+              0 0 15px theme('colors.neon.yellow');
+}
+
+.relay-timer {
+  animation: neon-blink 1s ease-in-out infinite;
+}
+
+@keyframes neon-blink {
+  0%, 100% {
+    box-shadow: 0 0 5px theme('colors.neon.red'),
+                0 0 10px theme('colors.neon.red'),
+                0 0 15px theme('colors.neon.red');
+  }
+  50% {
+    box-shadow: none;
+  }
+}
+
+.glass-effect {
+  background: rgba(180, 0, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(180, 0, 255, 0.1);
+}
+
+.mesh-node {
+  position: relative;
+}
+
+.mesh-node::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(45deg, transparent, rgba(180, 0, 255, 0.3), transparent);
+  border-radius: inherit;
+  z-index: -1;
+  animation: border-glow 2s linear infinite;
+}
+
+@keyframes border-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

@@ -23,13 +23,13 @@ export function MeshNetworkMap() {
   const [nodes, setNodes] = useState<MeshNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { sendMessage, lastMessage } = useWebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost/ws");
+  const { message } = useWebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost/ws");
 
   useEffect(() => {
-    if (lastMessage?.type === 'mesh_update') {
-      setNodes(lastMessage.data.nodes);
+    if (message?.type === 'mesh_update') {
+      setNodes(message.data.nodes);
     }
-  }, [lastMessage]);
+  }, [message]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

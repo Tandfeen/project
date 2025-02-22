@@ -34,7 +34,11 @@ export function StateRecoveryDialog() {
         voltage: 12,
         current: 0,
         temperature: 25,
-        lastFired: null
+        lastFired: undefined,
+        safetyDelay: 3,
+        maxTemperature: 85,
+        autoReset: false,
+        currentLimit: 10
       }))
     );
     usePersistentStore.getState().setSequences([]);

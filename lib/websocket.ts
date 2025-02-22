@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { useAtom } from 'jotai';
 import { 
   connectionStatusAtom,
@@ -32,6 +32,7 @@ export function useWebSocket(p0: string) {
   const [, setSequences] = useAtom(sequencesAtom);
   const { toast } = useToast();
   const { enabled: testModeEnabled, getMockData, simulateLatency } = useTestMode();
+  const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null);
 
   const connect = useCallback(async () => {
     if (ws.current?.readyState === WebSocket.OPEN) return;
@@ -104,6 +105,7 @@ export function useWebSocket(p0: string) {
       ws.current.onmessage = (event) => {
         try {
           const message: WebSocketMessage = JSON.parse(event.data);
+          setLastMessage(message);
           
           switch (message.type) {
             case 'systemMetrics':
@@ -199,6 +201,7 @@ export function useWebSocket(p0: string) {
   return {
     status,
     sendMessage,
-    isConnected: status === 'connected'
+    isConnected: status === 'connected',
+    message: lastMessage
   };
 }

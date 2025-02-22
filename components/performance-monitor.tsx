@@ -33,7 +33,7 @@ export function PerformanceMonitor() {
     uptime: 0
   });
 
-  const { lastMessage } = useWebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost/ws");
+  const { message: lastMessage } = useWebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost/ws");
 
   useEffect(() => {
     if (lastMessage?.type === 'system_metrics') {

@@ -29,7 +29,11 @@ export const usePersistentStore = create<PersistentState>()(
         voltage: 12,
         current: 0,
         temperature: 25,
-        lastFired: null
+        lastFired: undefined,
+        safetyDelay: 3,
+        maxTemperature: 85,
+        autoReset: false,
+        currentLimit: 10
       })),
       meshNodes: [],
       sequences: [],
@@ -39,7 +43,11 @@ export const usePersistentStore = create<PersistentState>()(
         temperature: 25,
         battery: 100,
         signalStrength: 0,
-        uptime: 0
+        uptime: 0,
+        networkLoad: 0,
+        meshQuality: 0,
+        packetLoss: 0,
+        latency: 0
       },
       setRelays: (relays) => set({ relays }),
       updateRelay: (id, updates) => set((state) => ({

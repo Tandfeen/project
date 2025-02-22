@@ -14,7 +14,10 @@ export default function Home() {
   const [sequence, setSequence] = useState<Sequence>({
     id: '1',
     name: 'Default Sequence',
-    steps: []
+    steps: [],
+    created: new Date().toISOString(),
+    lastRun: null,
+    status: 'ready'
   });
   const [currentNode, setCurrentNode] = useState<string | undefined>(undefined);
 
@@ -30,23 +33,23 @@ export default function Home() {
   };
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
+    <div className="space-y-6">
       <header className="flex flex-col gap-4">
-        <h1 className="text-4xl font-bold tracking-tight text-primary">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-primary">
           Relay Control System
         </h1>
         <SystemStatus />
       </header>
       
       <Tabs defaultValue="control" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4 h-auto">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto">
           <TabsTrigger value="control">Control Panel</TabsTrigger>
           <TabsTrigger value="stager">Sequence Stager</TabsTrigger>
           <TabsTrigger value="mesh">Mesh Network</TabsTrigger>
           <TabsTrigger value="diagnostics">Diagnostics</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="control" className="space-y-4">
+        <TabsContent value="control" className="space-y-6">
           <RelayGrid />
           <PerformanceMonitor />
         </TabsContent>

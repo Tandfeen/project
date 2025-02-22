@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,9 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { motion, AnimatePresence } from "framer-motion";
-import { Timer, AlertTriangle } from 'lucide-react';
+import { Timer, AlertTriangle } from "lucide-react";
 import type { Relay } from "@/lib/types";
-import { useToast } from "@/components/ui/use-toast";
 
 interface RelayTimerProps {
   open: boolean;
@@ -22,57 +21,44 @@ interface RelayTimerProps {
 }
 
 export function RelayTimer({ open, onClose, onFire, relay }: RelayTimerProps) {
-  const [time, setTime] = useState<number>(5);
-  const [isConfirming, setIsConfirming] = useState<boolean>(false);
-  const [countdown, setCountdown] = useState<number>(3);
-  const { toast } = useToast();
-
-  const handleClose = useCallback(() => {
-    setIsConfirming(false);
-    setCountdown(3);
-    onClose();
-  }, [onClose]);
+  const [time, setTime] = useState(5);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [countdown, setCountdown] = useState(3);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (isConfirming && countdown > 0) {
       timer = setTimeout(() => setCountdown(prev => prev - 1), 1000);
     } else if (isConfirming && countdown === 0) {
-      try {
-        onFire(time);
-        setIsConfirming(false);
-        setCountdown(3);
-      } catch (error) {
-        console.error('Error firing relay:', error);
-        toast({
-          title: "Error",
-          description: "Failed to fire relay. Please try again.",
-          variant: "destructive",
-        });
-      }
+      onFire(time);
+      setIsConfirming(false);
+      setCountdown(3);
     }
     return () => clearTimeout(timer);
-  }, [isConfirming, countdown, time, onFire, toast]);
+  }, [isConfirming, countdown, time, onFire]);
 
-  const handleFire = useCallback(() => {
-    if (!relay) {
-      console.error('No relay selected');
-      toast({
-        title: "Error",
-        description: "No relay selected. Please try again.",
-        variant: "destructive",
-      });
-      return;
-    }
+  useEffect(() => {
+    setProgress((time - 1) / 9 * 100); // Convert time (1-10) to percentage
+  }, [time]);
+
+  const handleFire = () => {
     setIsConfirming(true);
-  }, [relay, toast]);
+  };
 
-  const handleTimeChange = useCallback((newTime: number[]) => {
-    setTime(newTime[0]);
-  }, []);
+  // Calculate circle properties
+  const radius = 45;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
+    <Dialog open={open} onOpenChange={(open) => {
+      if (!open) {
+        setIsConfirming(false);
+        setCountdown(3);
+        onClose();
+      }
+    }}>
       <DialogContent className="sm:max-w-[425px] glass-effect">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold flex items-center gap-2">
@@ -110,27 +96,53 @@ export function RelayTimer({ open, onClose, onFire, relay }: RelayTimerProps) {
                     <div className="absolute inset-0 flex items-center justify-center">
                       <span className="text-4xl font-bold">{time}s</span>
                     </div>
-                    <svg className="w-full h-full -rotate-90">
+                    <svg 
+                      className="w-full h-full -rotate-90"
+                      viewBox="0 0 128 128"
+                    >
+                      {/* Background circle */}
                       <circle
-                        className="text-muted stroke-current"
-                        strokeWidth="4"
+                        className="text-muted/25 stroke-current"
+                        strokeWidth="8"
                         fill="transparent"
-                        r="45"
-                        cx="50"
-                        cy="50"
+                        r={radius}
+                        cx="64"
+                        cy="64"
                       />
+                      {/* Progress circle */}
+                      <motion.circle
+                        className="text-neon-purple stroke-current"
+                        strokeWidth="8"
+                        fill="transparent"
+                        r={radius}
+                        cx="64"
+                        cy="64"
+                        strokeLinecap="round"
+                        strokeDasharray={circumference}
+                        initial={{ strokeDashoffset: circumference }}
+                        animate={{ 
+                          strokeDashoffset,
+                          transition: { duration: 0.3, ease: "easeInOut" }
+                        }}
+                      />
+                      {/* Glow effect */}
                       <motion.circle
                         className="text-neon-purple stroke-current"
                         strokeWidth="4"
                         fill="transparent"
-                        r="45"
-                        cx="50"
-                        cy="50"
-                        strokeDasharray="283"
-                        initial={{ strokeDashoffset: 283 }}
+                        r={radius}
+                        cx="64"
+                        cy="64"
+                        strokeLinecap="round"
+                        strokeDasharray={circumference}
+                        initial={{ strokeDashoffset: circumference }}
                         animate={{ 
-                          strokeDashoffset: 283 - (time / 10) * 283,
-                          transition: { duration: 0.3 }
+                          strokeDashoffset,
+                          transition: { duration: 0.3, ease: "easeInOut" }
+                        }}
+                        style={{
+                          filter: "blur(8px)",
+                          opacity: 0.3
                         }}
                       />
                     </svg>
@@ -144,10 +156,9 @@ export function RelayTimer({ open, onClose, onFire, relay }: RelayTimerProps) {
               max={10}
               step={0.5}
               value={[time]}
-              onValueChange={handleTimeChange}
+              onValueChange={([value]) => setTime(value)}
               className="h-32"
               disabled={isConfirming}
-              aria-label="Set timer duration"
             />
           </div>
 
@@ -156,7 +167,6 @@ export function RelayTimer({ open, onClose, onFire, relay }: RelayTimerProps) {
               variant="destructive"
               onClick={handleFire}
               className="w-full relative overflow-hidden group"
-              disabled={!relay}
             >
               <span className="relative z-10">Fire Relay</span>
               <motion.div
@@ -196,4 +206,3 @@ export function RelayTimer({ open, onClose, onFire, relay }: RelayTimerProps) {
     </Dialog>
   );
 }
-

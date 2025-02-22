@@ -19,7 +19,7 @@ export function TestModeToggle() {
     enabled, 
     debugMode,
     simulateErrors,
-    simulateLatency,
+    latencyEnabled,
     toggleTestMode,
     toggleDebugMode,
     toggleErrorSimulation,
@@ -82,7 +82,7 @@ export function TestModeToggle() {
               <span>Simulate Latency</span>
             </div>
             <Switch
-              checked={simulateLatency}
+              checked={latencyEnabled}
               onCheckedChange={toggleLatencySimulation}
               className="data-[state=checked]:bg-neon-purple"
               disabled={!enabled}

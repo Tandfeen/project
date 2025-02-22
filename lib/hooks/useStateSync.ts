@@ -7,7 +7,7 @@ import { useTestMode } from './useTestMode';
 
 export function useStateSync() {
   const { enabled: testModeEnabled } = useTestMode();
-  const { status } = useWebSocket();
+  const { status } = useWebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost/ws");
   const {
     relays,
     meshNodes,

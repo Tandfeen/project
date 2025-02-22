@@ -16,7 +16,7 @@ export const generateMockRelay = (id: number): Relay => ({
   voltage: 12 + (Math.random() * 0.5),
   current: Math.random() * 0.1,
   temperature: 25 + (Math.random() * 10),
-  lastFired: null,
+  lastFired: undefined,
   safetyDelay: 3,
   maxTemperature: 85,
   autoReset: false,

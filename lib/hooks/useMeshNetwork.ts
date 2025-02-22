@@ -8,7 +8,7 @@ import { useToast } from '@/components/ui/use-toast';
 import type { MeshNode } from '../types';
 
 export function useMeshNetwork() {
-  const { sendMessage, isConnected } = useWebSocket();
+  const { sendMessage, isConnected } = useWebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost/ws");
   const [nodes, setNodes] = useAtom(meshNodesAtom);
   const [selectedNode, setSelectedNode] = useAtom(selectedNodeAtom);
   const { toast } = useToast();

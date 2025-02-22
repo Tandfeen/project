@@ -27,15 +27,15 @@ export default function RootLayout({
         >
           <div className="min-h-screen bg-gradient-to-b from-background to-background/90">
             <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <div className="container flex h-14 items-center justify-between">
+              <div className="container flex h-14 max-w-screen-2xl mx-auto px-4 items-center justify-between">
                 <MainNav />
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center gap-2 sm:gap-4">
                   <TestModeToggle />
                   <NetworkStatus />
                 </div>
               </div>
             </header>
-            <main className="container py-6">{children}</main>
+            <main className="container max-w-screen-2xl mx-auto px-4 py-6">{children}</main>
           </div>
           <StateRecoveryDialog />
           <Toaster richColors closeButton position="top-right" />

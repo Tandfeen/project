@@ -14,6 +14,10 @@ export const createMetricsSlice: StateCreator<MetricsSlice> = (set) => ({
     battery: 100,
     signalStrength: 0,
     uptime: 0,
+    networkLoad: 0,
+    meshQuality: 0,
+    packetLoss: 0,
+    latency: 0
   },
   updateSystemMetrics: (metrics) =>
     set((state) => ({

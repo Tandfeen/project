@@ -7,7 +7,7 @@ import { useWebSocket } from '../websocket';
 import { useToast } from '@/components/ui/use-toast';
 
 export function useRelayControl() {
-  const { sendMessage, isConnected } = useWebSocket();
+  const { sendMessage, isConnected } = useWebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost/ws");
   const [relays, setRelays] = useAtom(relaysAtom);
   const { toast } = useToast();
 
@@ -22,7 +22,7 @@ export function useRelayControl() {
     }
 
     sendMessage('fire_relay', { id: relayId, delay });
-    setRelays(prev => prev.map(relay => 
+    setRelays(prev => prev.map(relay =>  
       relay.id === relayId 
         ? { 
             ...relay, 

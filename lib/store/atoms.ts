@@ -14,6 +14,10 @@ export const systemMetricsAtom = atomWithStorage<SystemMetrics>('systemMetrics',
   battery: 100,
   signalStrength: 0,
   uptime: 0,
+  networkLoad: 0,
+  meshQuality: 0,
+  packetLoss: 0,
+  latency: 0
 });
 
 export const connectionStatusAtom = atom('disconnected');
